@@ -19,15 +19,14 @@ def install_requirements(python_executable: str, requirements_file: str) -> None
 
 def search_and_install(tool_hub_path: str, python_executable: str) -> None:
     """Search for subdirectories in tool_hub and install their requirements."""
+
     for root, dirs, files in os.walk(tool_hub_path):
         for directory in dirs:
+            print("in dir")
             requirements_file = os.path.join(root, directory, "requirements.txt")
             if os.path.isfile(requirements_file):
+                print(f"Tool {directory} requirements")
                 install_requirements(python_executable, requirements_file)
-
-def install_package_root(python_executable: str, setup_py_path: str) -> None:
-    """Install the package at the root in the virtual environment."""
-    subprocess.run([python_executable, setup_py_path, "install"])
 
 def main() -> None:
     """Main function to handle tool installation."""
@@ -43,15 +42,12 @@ def main() -> None:
         install_requirements(python_executable, requirements_txt)
 
     # Search for subdirectories in tool_hub and install their requirements
-    tool_hub_path: str = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tool_hub")
+    tool_hub_path: str = os.path.join(os.path.dirname(os.path.abspath(__file__)),"ReverseMosaic", "tool_hub")
     search_and_install(tool_hub_path, python_executable)
 
     # Install the package at the root in the venv
-    setup_py_path: str = os.path.join(os.path.dirname(os.path.abspath(__file__)), "setup.py")
-    if os.path.isfile(setup_py_path):
-        install_package_root(python_executable, setup_py_path)
-    else:
-        print("WARNING: 'setup.py' not found. The package at the root cannot be installed.")
+    setup_py_path: str = subprocess.run([python_executable, "-m", "pip", "install", "."])
+
 
 if __name__ == "__main__":
     main()
