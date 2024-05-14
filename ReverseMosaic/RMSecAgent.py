@@ -202,6 +202,13 @@ class RMSecAgent:
 
         return response
 
+def pass_deployment_directive(deployment_directive):
+    """
+    Entrypoint for sending a deployment directive/ query directly
+    """
+    sec_agent = RMSecAgent()
+    print(sec_agent.query_agent(deployment_directive))
+
 def run():
     """
     Parses command-line arguments and runs the RMSecAgent accordingly.
