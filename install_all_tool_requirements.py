@@ -13,21 +13,21 @@ def create_venv(venv_path: str, python_executable: str) -> None:
     """Create a virtual environment."""
     subprocess.run([python_executable, "-m", "venv", venv_path])
 
-def install_requirements(venv_path: str, python_executable: str, requirements_file: str) -> None:
+def install_requirements(python_executable: str, requirements_file: str) -> None:
     """Install requirements from a file."""
     subprocess.run([python_executable, "-m", "pip", "install", "-r", requirements_file])
 
-def search_and_install(tool_hub_path: str, venv_path: str, python_executable: str) -> None:
+def search_and_install(tool_hub_path: str, python_executable: str) -> None:
     """Search for subdirectories in tool_hub and install their requirements."""
     for root, dirs, files in os.walk(tool_hub_path):
         for directory in dirs:
             requirements_file = os.path.join(root, directory, "requirements.txt")
             if os.path.isfile(requirements_file):
-                install_requirements(venv_path, python_executable, requirements_file)
+                install_requirements(python_executable, requirements_file)
 
-def install_package_root(venv_python_executable: str, setup_py_path: str) -> None:
+def install_package_root(python_executable: str, setup_py_path: str) -> None:
     """Install the package at the root in the virtual environment."""
-    subprocess.run([venv_python_executable, setup_py_path, "install"])
+    subprocess.run([python_executable, setup_py_path, "install"])
 
 def main() -> None:
     """Main function to handle tool installation."""
@@ -36,24 +36,20 @@ def main() -> None:
     args = parser.parse_args()
 
     python_executable: str = args.python_path
-    venv_path: str = os.path.join(os.path.dirname(os.path.abspath(__file__)), "venv")
-    
-    if not is_venv_active():
-        create_venv(venv_path, python_executable)
 
     # Install main requirements if available
     requirements_txt: str = os.path.join(os.path.dirname(os.path.abspath(__file__)), "requirements.txt")
     if os.path.isfile(requirements_txt):
-        install_requirements(venv_path, python_executable, requirements_txt)
+        install_requirements(python_executable, requirements_txt)
 
     # Search for subdirectories in tool_hub and install their requirements
     tool_hub_path: str = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tool_hub")
-    search_and_install(tool_hub_path, venv_path, python_executable)
+    search_and_install(tool_hub_path, python_executable)
 
     # Install the package at the root in the venv
     setup_py_path: str = os.path.join(os.path.dirname(os.path.abspath(__file__)), "setup.py")
     if os.path.isfile(setup_py_path):
-        install_package_root(os.path.join(venv_path, "Scripts" if platform.system() == "Windows" else "bin", "python"), setup_py_path)
+        install_package_root(python_executable, setup_py_path)
     else:
         print("WARNING: 'setup.py' not found. The package at the root cannot be installed.")
 
