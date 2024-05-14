@@ -65,7 +65,7 @@ class FileTypeTool(BaseToolClass):
 Store the tool in the appropriate directory structure to be automatically picked up by Reverse Mosaic. Place the tool file inside the ```tool_hub/tools``` directory.
 
 ```
-Reverse-Mosaic/
+ReverseMosaic/
 ├── tool_hub/
 │   ├── tools/
 │   │   └── file_type_tool.py   <-- Your tool file
@@ -84,7 +84,7 @@ def get_class():
 Create a requirements.txt file in the same directory as your tool. This file should list all the dependencies required for your tool.
 
 ```
-Reverse-Mosaic/
+ReverseMosaic/
 ├── tool_hub/
 │   ├── tools/
 │   │   ├── file_type_tool.py
