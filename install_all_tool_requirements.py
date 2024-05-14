@@ -22,7 +22,7 @@ def search_and_install(tool_hub_path: str, python_executable: str) -> None:
 
     for root, dirs, files in os.walk(tool_hub_path):
         for directory in dirs:
-            print("in dir")
+
             requirements_file = os.path.join(root, directory, "requirements.txt")
             if os.path.isfile(requirements_file):
                 print(f"Tool {directory} requirements")
