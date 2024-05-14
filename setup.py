@@ -27,5 +27,6 @@ setup(
         'llama-index-readers-file'
     ],
     author='James Stevenson',
-    description='A multi-agent binary analysis toolkit'
+    description='A multi-agent binary analysis toolkit',
+    include_package_data=True
 )
