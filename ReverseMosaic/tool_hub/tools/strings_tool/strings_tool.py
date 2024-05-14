@@ -22,7 +22,7 @@ class StringsTool(BaseToolClass):
         with open(binary, 'rb') as file:
             binary_data = file.read()
             # Convert binary data to string
-            text = binary_data.decode('utf-8', errors='ignore')  # Change 'utf-8' to your encoding if needed
+            text = binary_data.decode('utf-8', errors='ignore')
             
             # Use regular expression to find words
             word_regex = re.compile(r'\b[a-zA-Z]+\b')
