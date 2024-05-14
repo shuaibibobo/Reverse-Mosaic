@@ -95,7 +95,7 @@ class AgentHelper:
                 bnb_4bit_use_double_quant=True,
                 use_cuda_fp16=True,
             )
-            model = AutoModelForCausalLM.from_pretrained(self.llm_model_name, quantization_config=quantization_config)
+            model = AutoModelForCausalLM.from_pretrained(self.llm_model_name, quantization_config=quantization_config,low_cpu_mem_usage=True)
             tokenizer = AutoTokenizer.from_pretrained(self.llm_model_name, padding_side="left")
 
             self.saved_model = model
