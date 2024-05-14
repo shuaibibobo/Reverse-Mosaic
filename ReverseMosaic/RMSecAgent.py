@@ -225,6 +225,11 @@ def run():
         raise Exception("No args provided")
 
 if __name__ == "__main__":
-    with warnings.catch_warnings(action="ignore"):
 
-        run()
+    try:
+        with warnings.catch_warnings(action="ignore"):
+            run()
+    except:
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore")
+            run()
