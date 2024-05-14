@@ -7,6 +7,7 @@ from misc_helper import get_text_from_pdf
 from agent_helper import AgentHelper
 from llama_index.core.agent import ReActAgent
 import gc 
+import warnings
 
 class RMSecAgent:
     """
@@ -224,4 +225,6 @@ def run():
         raise Exception("No args provided")
 
 if __name__ == "__main__":
-    run()
+    with warnings.catch_warnings(action="ignore"):
+
+        run()
