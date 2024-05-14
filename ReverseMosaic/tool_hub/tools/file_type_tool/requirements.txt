@@ -1,0 +1,3 @@
+python-magic
+libmagic
+python-magic-bin
