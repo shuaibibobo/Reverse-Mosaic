@@ -83,7 +83,7 @@ python reverse_mosaic.py --pdf_tool_data_path /path/to/pdf/directory
 python reverse_mosaic.py --deployment_directive "Analyze binary for vulnerabilities"
 ```
 ## Building Tools
-For a guide on building tools see the [readme](https://github.com/user1342/Reverse-Mosaic/tree/main/ReverseMosaic/ReverseMosaic/tool_hub) here!
+For a guide on building tools see the [readme](https://github.com/user1342/Reverse-Mosaic/tree/main/ReverseMosaic/tool_hub) here!
 
 # 🤖 Mistral-7B-Instruct-v0.2
 Behind the scenes Reverse Mosaic uses the ```Mistral-7B-Instruct-v0.2``` model from The Mistral AI Team - see [here](https://arxiv.org/abs/2310.06825). The Mistral-7B-Instruct-v0.2 Large Language Model (LLM) is an instruct fine-tuned version of the Mistral-7B-v0.2. More can be found on the model [here!](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2).
