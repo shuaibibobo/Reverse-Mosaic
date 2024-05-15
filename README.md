@@ -19,8 +19,8 @@ Reverse Mosaic is driven by a multi-agent large language model, and is prompted 
 
 # 🎒 Default Tools
 - ⚒️ **Ghidra Tool**: The [Ghidra Tool](https://github.com/user1342/Reverse-Mosaic/tree/main/ReverseMosaic/tool_hub/tools/ghidra_tool) provides RMosaic with functionality for decompiling a binary, extracting addresses and function names, as well as checking cross-references.
-- 📄 **Flawfinder Tool**: The [Flaw-Finder tool](https://github.com/user1342/Reverse-Mosaic/tree/main/ReverseMosaic/tool_hub/tools/flaw_finder_tool) allows RMosaic to identify vulnerabilities in decompiled C code.
-- 👥 **Strings Tool**: The [strings_tool](https://github.com/user1342/Reverse-Mosaic/tree/main/ReverseMosaic/tool_hub/tools/strings_tool), allows RMosaic to extract strings found in a binary.
+- 😈 **Flawfinder Tool**: The [Flaw-Finder tool](https://github.com/user1342/Reverse-Mosaic/tree/main/ReverseMosaic/tool_hub/tools/flaw_finder_tool) allows RMosaic to identify vulnerabilities in decompiled C code.
+- 🧵 **Strings Tool**: The [strings tool](https://github.com/user1342/Reverse-Mosaic/tree/main/ReverseMosaic/tool_hub/tools/strings_tool), allows RMosaic to extract strings found in a binary.
 
 # ⚙️ Installation
 
