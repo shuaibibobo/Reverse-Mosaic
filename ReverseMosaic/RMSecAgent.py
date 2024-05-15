@@ -3,8 +3,12 @@ import json
 import importlib.util
 import argparse
 from rich.console import Console
-from misc_helper import get_text_from_pdf
-from agent_helper import AgentHelper
+try:
+    from ReverseMosaic.misc_helper import get_text_from_pdf
+    from ReverseMosaic.agent_helper import AgentHelper
+except:
+    from misc_helper import get_text_from_pdf
+    from agent_helper import AgentHelper
 from llama_index.core.agent import ReActAgent
 import gc 
 import warnings
