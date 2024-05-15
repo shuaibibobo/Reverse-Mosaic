@@ -53,7 +53,7 @@ source venv/bin/activate
 ```
 
 ## Install the package and tool(s) dependencies:
-The following installs all nested tool dependancies, copies the tools to the ```<user>\.ReverseMosaic``` folder, and installs the ReverseMosaid package. 
+The following installs all nested tool dependancies, copies the tools to the ```<user>\.ReverseMosaic``` folder, and installs the ReverseMosaic package. 
 ```bash
 python install_all_tool_requirements.py <path_to_python_executable>
 ```
