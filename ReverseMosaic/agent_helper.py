@@ -5,7 +5,10 @@ import torch
 from llama_index.core import Settings
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.core.agent import AgentRunner
-from misc_helper import get_text_from_pdf
+try:
+    from ReverseMosaic.misc_helper import get_text_from_pdf
+except:
+    from misc_helper import get_text_from_pdf
 from pprint import pprint 
 import gc
 from llama_index.core.base.llms.types import ChatMessage, MessageRole
