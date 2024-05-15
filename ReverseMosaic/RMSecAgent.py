@@ -211,6 +211,10 @@ class RMSecAgent:
         
         return response
 
+def ask_query(query):
+    sec_agent = RMSecAgent()
+    return sec_agent.query_agent(query)
+
 def run():
     """
     Parses command-line arguments and runs the RMSecAgent accordingly.
@@ -224,19 +228,17 @@ def run():
     
     args = parser.parse_args()
 
-    sec_agent = RMSecAgent()
-
     if args.pdf_tool_data_path:
+        sec_agent = RMSecAgent()
         sec_agent.generate_briefs_from_directory(args.pdf_tool_data_path)
     elif args.deployment_directive:
-        print(sec_agent.query_agent(args.deployment_directive))
+        print(ask_query(args.deployment_directive))
     else:
         raise Exception("No args provided")
 
 if __name__ == "__main__":
     try:
         with warnings.catch_warnings(action="ignore"):
-
             run()
     except TypeError as e:
         run()
