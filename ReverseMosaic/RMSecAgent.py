@@ -1,201 +1,242 @@
-from llama_index.core.tools import QueryEngineTool, ToolMetadata
-from llama_index.llms.huggingface import HuggingFaceLLM
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
-import torch
-from llama_index.core import Settings
-from llama_index.embeddings.huggingface import HuggingFaceEmbedding
-from llama_index.core.agent import AgentRunner
+import os
+import json
+import importlib.util
+import argparse
+from rich.console import Console
 try:
     from ReverseMosaic.misc_helper import get_text_from_pdf
+    from ReverseMosaic.agent_helper import AgentHelper
 except:
     from misc_helper import get_text_from_pdf
-from pprint import pprint 
-import gc
-from llama_index.core.base.llms.types import ChatMessage, MessageRole
+    from agent_helper import AgentHelper
+from llama_index.core.agent import ReActAgent
+import gc 
+import warnings
 
-from llama_index.core import (
-    SimpleDirectoryReader,
-    VectorStoreIndex,
-    StorageContext,
-    load_index_from_storage,
-)
-
-
-class AgentHelper:
+class RMSecAgent:
     """
-    A helper class for AgentRunner containing utility functions.
+    A class to manage the operations of an RMSecAgent.
+
+    Attributes:
+        working_dir (str): The directory name for storing working data.
+        agent_help (AgentHelper): An instance of AgentHelper to assist with agent operations.
     """
+
+    home_dir = os.path.expanduser("~")
+    working_dir = os.path.join(home_dir, ".ReverseMosaic")
+    # Create a working directory
+    os.makedirs(working_dir, exist_ok=True)
+
+    agent_help = None
 
     def __init__(self):
-        self.saved_model = None
-        self.saved_tokenizer = None
-        self.saved_embed_model = None
-        self.llm_model_name = "unsloth/codegemma-7b-bnb-4bit"
-        self.embedding_model_name = "BAAI/bge-small-en-v1.5"
-
-    def execute_step(self, agent: AgentRunner, task):
         """
-        Execute a single step for an agent.
+        Initializes RMSecAgent with an instance of AgentHelper.
+        """
+        self.agent_help = AgentHelper()
+
+    def generate_tool_brief(self, pdf_file_path, should_get_pdf_text=True, should_add_name=False):
+        """
+        Generates a tool brief from a PDF file.
 
         Args:
-            agent (AgentRunner): The agent runner.
-            task: The task to execute.
+            pdf_file_path (str): The path to the PDF file.
+            should_get_pdf_text (bool, optional): Whether to extract text from the PDF. Defaults to True.
+            should_add_name (bool, optional): Whether to prompt for a tool name. Defaults to False.
+        """
+        # Check if file exists and is a PDF
+        if not os.path.exists(pdf_file_path) or not pdf_file_path.lower().endswith('.pdf'):
+            print("Invalid PDF file.")
+            return
+
+        # Extract file name
+        file_name = os.path.basename(pdf_file_path).replace(".pdf", "")
+                
+        if should_get_pdf_text:
+            description = get_text_from_pdf(pdf_file_path)
+        else:
+            description = input(f"What is the description for {file_name}? ")
+
+        if should_add_name:
+            file_name = input(f"What is the name for {file_name}? ")
+        
+
+        os.makedirs(os.path.join(self.working_dir, file_name), exist_ok=True)
+
+        # Create JSON data
+        pdf_data = {
+            "file_path": pdf_file_path,
+            "file_name": file_name,
+            "working_dir": os.path.join(self.working_dir, file_name),
+            "description": description
+        }
+        
+        # Write JSON to a file in the "briefs" subfolder
+        briefs_dir = os.path.join(self.working_dir, "briefs")
+        os.makedirs(briefs_dir, exist_ok=True)
+        json_file_path = os.path.join(briefs_dir, file_name + ".json")
+        with open(json_file_path, "w") as json_file:
+            json.dump(pdf_data, json_file, indent=4)
+        
+        print("Brief generated for PDF file:", file_name)
+        print("JSON file created at:", json_file_path)
+
+    def scan_working_dir(self):
+        """
+        Scans the working directory for tool briefs.
 
         Returns:
-            response: The response from the agent.
+            list: A list of tool brief dictionaries.
         """
-        gc.collect()
-        step_output = agent.run_step(task.task_id)
-        if step_output.is_last:
-            response = agent.finalize_response(task.task_id)
-            print(f"> Agent finished: {str(response)}")
-            return response
-        else:
-            return None
+        
+        # Define the working directory
+        
+        # Check if working directory exists
+        if not os.path.exists(os.path.join(self.working_dir, "briefs")):
+            print("Working directory doesn't exist.")
+            return []
+        
+        # Initialize list to store data
+        pdf_data_list = []
+        
+        # Scan working directory for JSON files
+        for root, dirs, files in os.walk(os.path.join(self.working_dir, "briefs")):
+            for file in files:
+                if file.endswith(".json"):
+                    json_file_path = os.path.join(root, file)
+                    with open(json_file_path, "r") as json_file:
+                        pdf_data = json.load(json_file)
+                        # Check if working directory and PDF file still exist
+                        if not os.path.exists(pdf_data["working_dir"]) or not os.path.exists(pdf_data["file_path"]):
+                            print(f"Warning: PDF or working directory missing for {pdf_data['file_name']}. Ignoring.")
+                            continue
+                        pdf_data_list.append(pdf_data)
+        
+        return pdf_data_list
 
-    def execute_steps(self, agent: AgentRunner, task, console=None):
+    def generate_briefs_from_directory(self, directory):
         """
-        Execute all steps for an agent.
+        Generates tool briefs from PDF files in a directory.
 
         Args:
-            agent (AgentRunner): The agent runner.
-            task: The task to execute.
-            console: The console for displaying steps (optional).
+            directory (str): The directory path.
+        """
+        # Check if the directory exists
+        if not os.path.exists(directory) or not os.path.isdir(directory):
+            print("Invalid directory.")
+            return
+        
+        # Get the list of PDF files in the directory
+        pdf_files = [file for file in os.listdir(directory) if file.lower().endswith('.pdf')]
+        
+        if not pdf_files:
+            print("No PDF files found in the directory.")
+            return
+        
+        for pdf_file in pdf_files:
+            pdf_file_path = os.path.join(directory, pdf_file)
+            self.generate_tool_brief(pdf_file_path)
+
+    def query_agent(self, deployment_directive):
+        """
+        Queries the agent based on a deployment directive.
+
+        Args:
+            deployment_directive (str): The deployment directive.
 
         Returns:
-            response: The final response from the agent.
+            str: The response from the agent.
         """
-        if console:
-            with console.status("[bold green]Executing analysis...") as status:
-                response = self.execute_step(agent, task)
-                while response is None:
-                    response = self.execute_step(agent, task)
+        console = Console()
 
-                return response
-        else:
-            response = self.execute_step(agent, task)
-            while response is None:
-                response = self.execute_step(agent, task)
-            return response
+        tool_briefs = self.scan_working_dir()
 
-    def load_model(self):
-        """
-        Load the pre-trained language model and tokenizer.
+        tools = []
+        console.clear()
+        with console.status("[bold green]Working on inheriting tools...") as status:
+            working_dir_tools = os.path.join(self.working_dir, "tool_hub","tools")
+            local_tools = os.path.join(__file__, "..","tool_hub","tools")
+            tool_paths = [working_dir_tools, local_tools]
 
-        Returns:
-            model (transformers.PreTrainedModel): Loaded language model.
-            tokenizer (transformers.PreTrainedTokenizer): Loaded tokenizer.
-        """
-        if self.saved_model is None:
-            quantization_config = BitsAndBytesConfig(
-                load_in_4bit=True,
-                bnb_4bit_compute_dtype=torch.float16,
-                bnb_4bit_quant_type="nf4",
-                bnb_4bit_use_double_quant=True,
-                use_cuda_fp16=True,
-            )
-            model = AutoModelForCausalLM.from_pretrained(self.llm_model_name, quantization_config=quantization_config,low_cpu_mem_usage=True)
-            tokenizer = AutoTokenizer.from_pretrained(self.llm_model_name, padding_side="left")
+            processed_tools = []
+            for folder_path in tool_paths:
+                for root, dirs, files in os.walk(folder_path):
+                    for dir in dirs:
+                        subfolder_path = os.path.join(root, dir)
+                        if "tool" in dir.lower():
+                            for file_name in os.listdir(subfolder_path):
+                                if file_name.endswith(".py") and not file_name.startswith("__"):
+                                    module_name = file_name[:-3]  # Remove the .py extension
+                                    if module_name not in processed_tools:
+                                        module_path = os.path.join(subfolder_path, file_name)
 
-            self.saved_model = model
-            self.saved_tokenizer = tokenizer
-            return model, tokenizer
-        else:
-            return self.saved_model, self.saved_tokenizer
+                                        status.update(f"[bold green]Working on inheriting tool {module_name}")
+                                        spec = importlib.util.spec_from_file_location(module_name, module_path)
+                                        mod = importlib.util.module_from_spec(spec)
 
-    def get_llm(self):
-        """
-        Get the HuggingFaceLLM object.
+                                        spec.loader.exec_module(mod)
 
-        Returns:
-            llm (HuggingFaceLLM): HuggingFace Language Model object.
-        """
-        def messages_to_prompt(messages):
-            prompt = ""
-            for message in messages:
-                if message.role == 'system':
-                    prompt += f"\n{message.content}</s>\n"
-                elif message.role == 'user':
-                    prompt += f"\n{message.content}</s>\n"
-                elif message.role == 'assistant':
-                    prompt += f"\n{message.content}</s>\n"
+                                        returned_tools = mod.get_class().return_tools()
+                                        tools = tools + returned_tools
+                                        processed_tools.append(module_name)
+                                        console.log(f"Inherited {len(returned_tools)} tool(s) from {module_name} in tool hub")
 
-            # Ensure we start with a system prompt, insert blank if needed
-            if not prompt.startswith("\n"):
-                prompt = "\n</s>\n" + prompt
+            for brief in tool_briefs:
+                tool_name = brief["file_name"].replace(".pdf","")
 
-            # Add final assistant prompt
-            prompt = prompt + "\n"
+                if tool_name not in processed_tools:
+                    tool_path = brief["file_path"]
+                    tool_working_dir = brief["working_dir"]
+                    tool_description = brief["description"]
 
-            return prompt
+                    status.update(f"[bold green]Working on inheriting tool {tool_name}")
+                    tool = self.agent_help.generate_tool(tool_name, tool_path, tool_working_dir, tool_description)
+                    tools.append(tool)
+                    console.log(f"Inherited {tool_name} tool from PDF briefs -  saved to {tool_working_dir}")
+                    gc.collect()
+                    processed_tools.append(tool_name)
 
-        def completion_to_prompt(completion):
-            return f"\n</s>\n\n{completion}</s>\n\n"
-
-        model, tokenizer = self.load_model()
-
-        llm = HuggingFaceLLM(
-            model=model,
-            tokenizer_name=self.llm_model_name,
-            model_name=self.llm_model_name,
-            tokenizer=tokenizer,
-            max_new_tokens=500,
-            messages_to_prompt=messages_to_prompt,
-            completion_to_prompt=completion_to_prompt,
+        agent = ReActAgent.from_tools(
+            tools,
+            llm=self.agent_help.get_llm(),
+            verbose=True,
+            context="You are Reverse Mosaic, a binary analysis expert. It is your job to review, decompile, and analyse binary files alongside answering reverse engineering, vulnerability research, and malware analysis based questions. You should always query existing resources first before interogating a target. Only ever use correct information and never placeholders. You have access to tools that will decompile a binary, get function names, and get decompiled code from function names, use them."
         )
 
-        return llm
-
-    def generate_tool(self, tool_name, pdf_path, working_dir, description):
-        """
-        Generate a tool.
-
-        Args:
-            tool_name (str): Name of the tool.
-            pdf_path (str): Path to the PDF file.
-            working_dir (str): Working directory for storing indexes.
-            description (str): Description of the tool.
-
-        Returns:
-            tool: The generated tool.
-        """
-        # Load embedding model
-        if self.saved_embed_model is None:
-            embed_model = HuggingFaceEmbedding(model_name=self.embedding_model_name)
-            Settings.embed_model = embed_model
-        else:
-            embed_model = self.saved_embed_model
-
-        try:
-            storage_context = StorageContext.from_defaults(persist_dir=working_dir)
-            index = load_index_from_storage(storage_context)
-            index_loaded = True
-        except:
-            index_loaded = False
-
-        if not index_loaded:
-            # Load data
-            docs = SimpleDirectoryReader(input_files=[pdf_path]).load_data()
-
-            # Build index
-            index = VectorStoreIndex.from_documents(docs)
-
-            # Persist index
-            index.storage_context.persist(persist_dir=working_dir)
-
-        # Create query engine
-        engine = index.as_query_engine(similarity_top_k=3, llm=self.get_llm())
-
-        description = f"Provides information about: {description}."
-
-        tool = QueryEngineTool(
-            query_engine=engine,
-            metadata=ToolMetadata(
-                name=tool_name,
-                description=(
-                    description.split("\n")
-                ),
-            ),
+        task = agent.create_task(
+            deployment_directive,
         )
+        
+        response = self.agent_help.execute_steps(agent, task, console)
+        
+        return response
 
-        return tool
+def run():
+    """
+    Parses command-line arguments and runs the RMSecAgent accordingly.
+    """
+    parser = argparse.ArgumentParser(description="PDF Tools Builder")
+
+    # Define mutually exclusive group for build_pdf_tools and deployment_directive
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--pdf_tool_data_path", help="Specify the path to build PDF tools")
+    group.add_argument("--deployment_directive", help="Specify the query to run against RMSecAgent")
+    
+    args = parser.parse_args()
+
+    sec_agent = RMSecAgent()
+
+    if args.pdf_tool_data_path:
+        sec_agent.generate_briefs_from_directory(args.pdf_tool_data_path)
+    elif args.deployment_directive:
+        print(sec_agent.query_agent(args.deployment_directive))
+    else:
+        raise Exception("No args provided")
+
+if __name__ == "__main__":
+    try:
+        with warnings.catch_warnings(action="ignore"):
+
+            run()
+    except TypeError as e:
+        run()
