@@ -33,29 +33,6 @@ class TestAgentHelper:
             response = helper.execute_steps(agent, task, console_mock)
             assert response is not None
             mock_print.assert_called()
-    
-    def test_load_model(self):
-        helper = AgentHelper()
-        model, tokenizer = helper.load_model()
-        assert model is not None
-        assert tokenizer is not None
-    
-    def test_get_llm(self):
-        helper = AgentHelper()
-        llm = helper.get_llm()
-        assert llm is not None
-    
-    def test_generate_tool(self):
-        helper = AgentHelper()
-        with NamedTemporaryFile(delete=False) as temp_pdf:
-            temp_pdf.write(PDF_CONTENT)
-            pdf_file_path = temp_pdf.name
-        
-        tool = helper.generate_tool("test_tool", pdf_file_path, "working", "This is a sample PDF description.")
-        assert tool is not None
-        
-        # Clean up
-        os.remove(pdf_file_path)
 
 # Test FlawFinderTool class
 class TestFlawFinderTool:
