@@ -30,7 +30,7 @@ class AgentHelper:
         self.saved_model = None
         self.saved_tokenizer = None
         self.saved_embed_model = None
-        self.llm_model_name = "unsloth/mistral-7b-instruct-v0.2-bnb-4bit"
+        self.llm_model_name = "unsloth/codegemma-7b-bnb-4bit"
         self.embedding_model_name = "BAAI/bge-small-en-v1.5"
 
     def execute_step(self, agent: AgentRunner, task):
@@ -66,15 +66,11 @@ class AgentHelper:
             response: The final response from the agent.
         """
         if console:
-            console.clear()
-            with console.status("[bold green]Executing steps...") as status:
+            with console.status("[bold green]Executing analysis...") as status:
                 response = self.execute_step(agent, task)
-                if response is not None and "No such tool" in response:
-                    response = None
                 while response is None:
                     response = self.execute_step(agent, task)
-                    if response is not None and "No such tool" in response:
-                        response = None
+
                 return response
         else:
             response = self.execute_step(agent, task)
