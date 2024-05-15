@@ -22,7 +22,13 @@ class RMSecAgent:
         agent_help (AgentHelper): An instance of AgentHelper to assist with agent operations.
     """
 
-    working_dir = "working"
+    if os.name == "nt":  
+        # Windows
+        working_dir = os.path.join(os.getenv("ProgramFiles"), "ReverseMosaic")
+    else:  
+        # Linux, macOS, etc.
+        working_dir = os.path.join("usr","local","ReverseMosaic")
+
     agent_help = None
 
     def __init__(self):
@@ -156,27 +162,30 @@ class RMSecAgent:
         tools = []
         console.clear()
         with console.status("[bold green]Working on inheriting tools...") as status:
-            
-            folder_path = r"tool_hub\tools"
-            for root, dirs, files in os.walk(os.path.join(__file__, "..", folder_path)):
-                for dir in dirs:
-                    subfolder_path = os.path.join(root, dir)
-                    if "tool" in dir.lower():
-                        for file_name in os.listdir(subfolder_path):
-                            if file_name.endswith(".py") and not file_name.startswith("__"):
-                                module_name = file_name[:-3]  # Remove the .py extension
-                                module_path = os.path.join(subfolder_path, file_name)
+            working_dir_tools = os.path.join(self.working_dir, "tool_hub","tools")
+            local_tools = os.path.join("tool_hub","tools")
+            tool_paths = [working_dir_tools, local_tools]
 
-                                status.update(f"[bold green]Working on inheriting tool {module_name}")
-                                spec = importlib.util.spec_from_file_location(module_name, module_path)
-                                mod = importlib.util.module_from_spec(spec)
+            for folder_path in tool_paths:
+                for root, dirs, files in os.walk(os.path.join(__file__, "..", folder_path)):
+                    for dir in dirs:
+                        subfolder_path = os.path.join(root, dir)
+                        if "tool" in dir.lower():
+                            for file_name in os.listdir(subfolder_path):
+                                if file_name.endswith(".py") and not file_name.startswith("__"):
+                                    module_name = file_name[:-3]  # Remove the .py extension
+                                    module_path = os.path.join(subfolder_path, file_name)
 
-                                spec.loader.exec_module(mod)
+                                    status.update(f"[bold green]Working on inheriting tool {module_name}")
+                                    spec = importlib.util.spec_from_file_location(module_name, module_path)
+                                    mod = importlib.util.module_from_spec(spec)
 
-                                returned_tools = mod.get_class().return_tools()
-                                tools = tools + returned_tools
-                                    
-                                console.log(f"Inherited {len(returned_tools)} tool(s) from {module_name} in tool hub")
+                                    spec.loader.exec_module(mod)
+
+                                    returned_tools = mod.get_class().return_tools()
+                                    tools = tools + returned_tools
+                                        
+                                    console.log(f"Inherited {len(returned_tools)} tool(s) from {module_name} in tool hub")
 
             for brief in tool_briefs:
                 tool_name = brief["file_name"].replace(".pdf","")
@@ -186,7 +195,7 @@ class RMSecAgent:
                 status.update(f"[bold green]Working on inheriting tool {tool_name}")
                 tool = self.agent_help.generate_tool(tool_name, tool_path, tool_working_dir, tool_description)
                 tools.append(tool)
-                console.log(f"Inherited {tool_name} tool from PDF briefs")
+                console.log(f"Inherited {tool_name} tool from PDF briefs -  saved to {tool_working_dir}")
                 gc.collect()
 
         console.clear()
@@ -194,7 +203,7 @@ class RMSecAgent:
             tools,
             llm=self.agent_help.get_llm(),
             verbose=True,
-            context="You are Reverse Mosaic, a binary analysis expert. It is your job to review, decompile, and analyse binary files alongside answering reverse engineering, vulnerability research, and malware analysis based questions."
+            context="You are Reverse Mosaic, a binary analysis expert. It is your job to review, decompile, and analyse binary files alongside answering reverse engineering, vulnerability research, and malware analysis based questions. You should always query existing resources first before interogating a target. Only ever use correct information and never placeholders. You have access to tools that will decompile a binary, get function names, and get decompiled code from function names, use them."
         )
 
         console.log("Starting task!")
@@ -230,6 +239,9 @@ def run():
         raise Exception("No args provided")
 
 if __name__ == "__main__":
-    with warnings.catch_warnings(action="ignore"):
+    try:
+        with warnings.catch_warnings(action="ignore"):
 
+            run()
+    except TypeError as e:
         run()
