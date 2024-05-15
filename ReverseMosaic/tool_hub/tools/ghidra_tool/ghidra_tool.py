@@ -1,6 +1,11 @@
-from tool_hub.base_tool import BaseToolClass
-from tool_hub.tools.ghidra_tool.GhidraBridge.ghidra_bridge import GhidraBridge
-from pydantic import Field
+try:
+    from ReverseMosaic.tool_hub.base_tool import BaseToolClass
+except:
+    from tool_hub.base_tool import BaseToolClass
+try:
+    from ReverseMosaic.tool_hub.tools.ghidra_tool.GhidraBridge.ghidra_bridge import GhidraBridge
+except:
+    from tool_hub.tools.ghidra_tool.GhidraBridge.ghidra_bridge import GhidraBridge
 from llama_index.core.tools import FunctionTool
 
 
