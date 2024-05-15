@@ -15,7 +15,7 @@
 </div>
 
 # 📙 Overview
-Reverse Mosaic is driven by a multi-agent large language model, and is prompted using the [ReAct](https://www.promptingguide.ai/techniques/react#results-on-knowledge-intensive-tasks) prompting framework, and as such it is entirely autonomous. RMosaic includes various tools for analyzing binary files, such as extracting text, retrieving file types, finding flaws and vulnerabilities, interacting with Ghidra, and retrieving strings. Reverse Mosaic can generate query tool briefs from PDF files, providing a summary of the content and relevant information for analysis.
+Reverse Mosaic is driven by a multi-agent large language model, and is prompted using the [ReAct](https://www.promptingguide.ai/techniques/react) prompting framework, and as such it is entirely autonomous. RMosaic includes various tools for analyzing binary files, such as extracting text, retrieving file types, finding flaws and vulnerabilities, interacting with Ghidra, and retrieving strings. Reverse Mosaic can generate query tool briefs from PDF files, providing a summary of the content and relevant information for analysis.
 
 # 🎒 Default Tools
 The following proof-of-concept tools are included in RMosaic by default.
