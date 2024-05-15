@@ -53,7 +53,6 @@ cd Reverse-Mosaic
 python3 -m venv venv
 source venv/bin/activate
 ```
-```
 
 ## Install the package and core & tool(s) dependencies:
 
