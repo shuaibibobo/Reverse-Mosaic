@@ -16,3 +16,4 @@ accelerate>=0.16.0,<1
 transformers[torch]>=4.28.1
 torch>=1.13.1
 pdfplumber
+pytest
