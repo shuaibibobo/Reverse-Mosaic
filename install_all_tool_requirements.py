@@ -64,6 +64,10 @@ def main() -> None:
     source_folder = os.path.join("ReverseMosaic","tool_hub","tools")
     destination_folder = os.path.join(home_dir, ".ReverseMosaic","tool_hub","tools")
 
+    if os.path.exists(destination_folder):
+        # Delete the folder and its contents
+        shutil.rmtree(destination_folder)
+        
     copy_folder(source_folder, destination_folder)
 
 
