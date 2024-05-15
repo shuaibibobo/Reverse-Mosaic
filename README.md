@@ -28,17 +28,17 @@ Automated natural language binary analysis query based engine. RMosaic is driven
 # ⚙️ Installation
 
 ## System Requirements
-Monocle uses the Mistral-7B-Instruct-v0.2 model, and where possible offloads processing to your system's GPU. It is recommended to run Monocle on a machine with a minimum of 16GB of RAM and a dedicated Nvidia GPU with at least 4GB of memory. **However,** it can run on lower spec machines, but will be significantly slower.
+Reverse Mosaic uses the Mistral-7B-Instruct-v0.2 model, and where possible offloads processing to your system's GPU. It is recommended to run Reverse Mosaic on a machine with a minimum of 16GB of RAM and a dedicated Nvidia GPU with at least 4GB of memory. **However,** it can run on lower spec machines, but will be significantly slower.
 
-**Monocle has been tested on Windows 11; however, it should be compatible with Unix and other systems.**
+**Reverse Mosaic has been tested on Windows 11; however, it should be compatible with Unix and other systems.**
 
 ## Dependencies
-Monocle requires **Nvidia CUDA** which allows for greatly increased performance of the LLM. For this follow the below steps:
+Reverse Mosaic requires **Nvidia CUDA** which allows for greatly increased performance of the LLM. For this follow the below steps:
 - Ensure your Nvidia drivers are up to date: https://www.nvidia.com/en-us/geforce/drivers/
 - Install the appropriate dependancies from here: https://pytorch.org/get-started/locally/
 - Validate CUDA is installed correctly by running the following and being returned a prompt ```python -c "import torch; print(torch.rand(2,3).cuda())"```
 
-Monocle requires [Ghidra](https://ghidra-sre.org/) to be installed and accessible. Additionally, ensure that `analyzeHeadless` is available in your environment. 
+Reverse Mosaic requires [Ghidra](https://ghidra-sre.org/) to be installed and accessible. Additionally, ensure that `analyzeHeadless` is available in your environment. 
 
 ## Clone this repository:
 
