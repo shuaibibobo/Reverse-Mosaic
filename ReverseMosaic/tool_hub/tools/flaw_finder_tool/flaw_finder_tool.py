@@ -1,4 +1,7 @@
-from tool_hub.base_tool import BaseToolClass
+try:
+    from ReverseMosaic.tool_hub.base_tool import BaseToolClass
+except:
+    from tool_hub.base_tool import BaseToolClass
 from llama_index.core.tools import FunctionTool
 import subprocess
 import sys
