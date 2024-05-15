@@ -52,20 +52,32 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-## Install the package tool(s) dependencies:
+## Install the package and tool(s) dependencies:
 The following installs all nested tool dependancies, copies the tools to the ```<user>\.ReverseMosaic``` folder, and installs the ReverseMosaid package. 
 ```bash
 python install_all_tool_requirements.py <path_to_python_executable>
 ```
+
+## Run RMosaic
+```bash
+ReverseMosaic.exe
+```
+or
+```bash
+ReverseMosaic
+```
+
+# 📦 Creating Tools
+
 ## Generating Tool Briefs
 Depending on your task you may want to provide Reverse Mosaic with additional context. This can be done in the form of PDFs. For example are you doing a task on malware analysis, then provide Reverse Mosaic with a PDF on malware analysis. PDF tool briefs only need to be generated once (just don't delete or remove the PDF before your first run). To generate a query tool brief from a PDF file use the following command:
 
 ```bash
-ReverseMosaic.exe  --pdf_tool_data_path <path_to_pdf_file_or_directory>
+ReverseMosaic.exe  --pdf_tool_data_path <path_to_pdf_directory>
 ```
 
-## Building Complex Tools
-For a guide on building more complex tools see the [readme](https://github.com/user1342/Reverse-Mosaic/tree/main/ReverseMosaic/tool_hub) here!
+## Building Custom Tools
+For a guide on building tools see the [readme](https://github.com/user1342/Reverse-Mosaic/tree/main/ReverseMosaic/tool_hub) here!
 
 # 🦾 Usage
 Reverse Mosaic provides two main functionalities: generating tool briefs from PDF files and executing analysis tasks based on deployment directives.
