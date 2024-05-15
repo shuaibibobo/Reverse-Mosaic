@@ -1,9 +1,9 @@
 from llama_index.core.tools import FunctionTool
-import subprocess
-import sys
-import tempfile
 import re
-from tool_hub.base_tool import BaseToolClass
+try:
+    from ReverseMosaic.tool_hub.base_tool import BaseToolClass
+except:
+    from tool_hub.base_tool import BaseToolClass
 
 class StringsTool(BaseToolClass):
     """A tool for retrieving strings from a binary."""
