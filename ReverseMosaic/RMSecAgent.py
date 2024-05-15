@@ -163,6 +163,7 @@ class RMSecAgent:
                                 module_name = file_name[:-3]  # Remove the .py extension
                                 module_path = os.path.join(subfolder_path, file_name)
 
+                                status.update(f"[bold green]Working on inheriting tool {module_name}")
                                 spec = importlib.util.spec_from_file_location(module_name, module_path)
                                 mod = importlib.util.module_from_spec(spec)
 
@@ -178,7 +179,7 @@ class RMSecAgent:
                 tool_path = brief["file_path"]
                 tool_working_dir = brief["working_dir"]
                 tool_description = brief["description"]
-
+                status.update(f"[bold green]Working on inheriting tool {tool_name}")
                 tool = self.agent_help.generate_tool(tool_name, tool_path, tool_working_dir, tool_description)
                 tools.append(tool)
                 console.log(f"Inherited {tool_name} tool from PDF briefs")
@@ -201,13 +202,6 @@ class RMSecAgent:
         response = self.agent_help.execute_steps(agent, task, console)
 
         return response
-
-def pass_deployment_directive(deployment_directive):
-    """
-    Entrypoint for sending a deployment directive/ query directly
-    """
-    sec_agent = RMSecAgent()
-    print(sec_agent.query_agent(deployment_directive))
 
 def run():
     """
@@ -232,11 +226,6 @@ def run():
         raise Exception("No args provided")
 
 if __name__ == "__main__":
+    with warnings.catch_warnings(action="ignore"):
 
-    try:
-        with warnings.catch_warnings(action="ignore"):
-            run()
-    except:
-        with warnings.catch_warnings():
-            warnings.filterwarnings("ignore")
-            run()
+        run()
