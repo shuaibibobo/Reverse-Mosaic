@@ -14,15 +14,13 @@
 
 </div>
 
-
 # 📙 Overview
+Reverse Mosaic is driven by a multi-agent large language model, and is prompted using the [ReAct](https://www.promptingguide.ai/techniques/react#results-on-knowledge-intensive-tasks) prompting framework, and as such it is entirely autonomous. RMosaic includes various tools for analyzing binary files, such as extracting text, retrieving file types, finding flaws and vulnerabilities, interacting with Ghidra, and retrieving strings. Reverse Mosaic can generate query tool briefs from PDF files, providing a summary of the content and relevant information for analysis.
 
-Automated natural language binary analysis query based engine. RMosaic is driven by a large language model prompted using the [ReAct](https://www.promptingguide.ai/techniques/react#results-on-knowledge-intensive-tasks) prompting framework. RMosaic utilises a ```tool_hub``` of tools which it can use to carry out it's task. For example, it can be provided PDF files to build it's knowledge on a specific problem space, and by default it has access to the [Ghidra Tool](https://github.com/user1342/Reverse-Mosaic/tree/main/ReverseMosaic/tool_hub/tools/ghidra_tool), [flaw_finder_tool](https://github.com/user1342/Reverse-Mosaic/tree/main/ReverseMosaic/tool_hub/tools/flaw_finder_tool), and [strings_tool](https://github.com/user1342/Reverse-Mosaic/tree/main/ReverseMosaic/tool_hub/tools/strings_tool).
-
-# 🎒 Features
-- ⚒️ **Binary Analysis Tools**: It includes various tools for analyzing binary files, such as extracting text, retrieving file types, finding flaws and vulnerabilities, interacting with Ghidra, and retrieving strings.
-- 📄 **PDF Query Tool Generation**: Reverse Mosaic can generate query tool briefs from PDF files, providing a summary of the content and relevant information for analysis.
-- 👥 **Multi-Agent Architecture**: The toolkit utilizes a multi-agent architecture to manage and execute analysis tasks with a full context of it's task.
+# 🎒 Default Tools
+- ⚒️ **Ghidra Tool**: The [Ghidra Tool](https://github.com/user1342/Reverse-Mosaic/tree/main/ReverseMosaic/tool_hub/tools/ghidra_tool) provides RMosaic with functionality for decompiling a binary, extracting addresses and function names, as well as checking cross-references.
+- 📄 **Flawfinder Tool**: The [Flaw-Finder tool](https://github.com/user1342/Reverse-Mosaic/tree/main/ReverseMosaic/tool_hub/tools/flaw_finder_tool) allows RMosaic to identify vulnerabilities in decompiled C code.
+- 👥 **Strings Tool**: The [strings_tool](https://github.com/user1342/Reverse-Mosaic/tree/main/ReverseMosaic/tool_hub/tools/strings_tool), allows RMosaic to extract strings found in a binary.
 
 # ⚙️ Installation
 
