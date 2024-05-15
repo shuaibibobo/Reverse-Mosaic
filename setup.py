@@ -1,12 +1,11 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(
-    name='RMSecAgent',
+    name='ReverseMosaic',
     version='1.0.0',
-    packages=find_packages(),
     entry_points={
         'console_scripts': [
-            'RMSecAgent = ReverseMosaic.rms_sec_agent:run'
+            'ReverseMosaic = ReverseMosaic.RMSecAgent:run'
         ]
     },
     install_requires=[
@@ -28,5 +27,4 @@ setup(
     ],
     author='James Stevenson',
     description='A multi-agent binary analysis toolkit',
-    include_package_data=True
 )
