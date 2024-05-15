@@ -2,7 +2,7 @@
     <img width=100% src="simple-logo.png">
   </a>
 </p>
-<p align="center"> 🤖 Multi-Agent Binary Analysis Toolkit 🔎 </p>
+<p align="center"> 🤖 Multi-Agent Binary Analysis Toolkit 🧩 </p>
 
 <div align="center">
 
