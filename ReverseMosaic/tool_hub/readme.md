@@ -110,7 +110,7 @@ Once the tools are loaded, Reverse Mosaic can utilize them to perform analysis t
 # Conclusion
 By following this guide, you can create custom tools for Reverse Mosaic to extend its capabilities and perform specialized analysis tasks on binary files. Remember to structure your tools properly, add dependencies to the requirements.txt file, and store them in the designated directory for seamless integration with Reverse Mosaic.
 
-
+<p align="center"> <img margin-right: auto width=25% src="../../small-logo.png"> </p>
 
 
 
