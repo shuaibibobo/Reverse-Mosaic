@@ -137,7 +137,7 @@ class RMSecAgent:
             pdf_file_path = os.path.join(directory, pdf_file)
             self.generate_tool_brief(pdf_file_path)
 
-    def query_agent(self, deployment_directive):
+    def query_agent(self, deployment_directive, is_verbose=False):
         """
         Queries the agent based on a deployment directive.
 
@@ -199,7 +199,7 @@ class RMSecAgent:
         agent = ReActAgent.from_tools(
             tools,
             llm=self.agent_help.get_llm(),
-            verbose=True,
+            verbose=is_verbose,
             context="You are Reverse Mosaic, a binary analysis expert. It is your job to review, decompile, and analyse binary files alongside answering reverse engineering, vulnerability research, and malware analysis based questions. You should always query existing resources first before interogating a target. Only ever use correct information and never placeholders. You have access to tools that will decompile a binary, get function names, and get decompiled code from function names, use them."
         )
 
@@ -211,9 +211,9 @@ class RMSecAgent:
         
         return response
 
-def ask_query(query):
+def ask_query(query, is_verbose=False):
     sec_agent = RMSecAgent()
-    return sec_agent.query_agent(query)
+    return sec_agent.query_agent(query,is_verbose)
 
 def run():
     """
@@ -232,7 +232,7 @@ def run():
         sec_agent = RMSecAgent()
         sec_agent.generate_briefs_from_directory(args.pdf_tool_data_path)
     elif args.deployment_directive:
-        print(ask_query(args.deployment_directive))
+        print(ask_query(args.deployment_directive, True))
     else:
         raise Exception("No args provided")
 
