@@ -4,6 +4,7 @@ import platform
 import argparse
 import sys
 from typing import Optional
+import shutil
 
 def is_venv_active() -> bool:
     """Check if a virtual environment is active."""
@@ -28,6 +29,15 @@ def search_and_install(tool_hub_path: str, python_executable: str) -> None:
                 print(f"Tool {directory} requirements")
                 install_requirements(python_executable, requirements_file)
 
+def copy_folder(source, destination):
+    try:
+        shutil.copytree(source, destination)
+        print(f"Folder copied successfully to {destination}!")
+    except shutil.Error as e:
+        print(f"Error: {e}")
+    except OSError as e:
+        print(f"Error: {e}")
+
 def main() -> None:
     """Main function to handle tool installation."""
     parser = argparse.ArgumentParser(description="Tool installation with virtual environment")
@@ -47,6 +57,14 @@ def main() -> None:
 
     # Install the package at the root in the venv
     setup_py_path: str = subprocess.run([python_executable, "-m", "pip", "install", "."])
+
+    # Copy Tools
+    print("Copying tools folder...")
+    home_dir = os.path.expanduser("~")
+    source_folder = os.path.join("ReverseMosaic","tool_hub","tools")
+    destination_folder = os.path.join(home_dir, ".ReverseMosaic","tool_hub","tools")
+
+    copy_folder(source_folder, destination_folder)
 
 
 if __name__ == "__main__":
