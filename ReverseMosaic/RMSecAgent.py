@@ -194,7 +194,7 @@ class RMSecAgent:
             tools,
             llm=self.agent_help.get_llm(),
             verbose=True,
-            # context=context
+            context="You are Reverse Mosaic, a binary analysis expert. It is your job to review, decompile, and analyse binary files alongside answering reverse engineering, vulnerability research, and malware analysis based questions."
         )
 
         console.log("Starting task!")
@@ -202,9 +202,9 @@ class RMSecAgent:
         task = agent.create_task(
             deployment_directive,
         )
-
+        
         response = self.agent_help.execute_steps(agent, task, console)
-
+        
         return response
 
 def run():
@@ -216,7 +216,7 @@ def run():
     # Define mutually exclusive group for build_pdf_tools and deployment_directive
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--pdf_tool_data_path", help="Specify the path to build PDF tools")
-    group.add_argument("--deployment_directive", help="Specify the deployment directive to build PDF tools")
+    group.add_argument("--deployment_directive", help="Specify the query to run against RMSecAgent")
     
     args = parser.parse_args()
 
