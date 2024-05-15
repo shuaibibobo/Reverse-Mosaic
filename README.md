@@ -18,6 +18,7 @@
 Reverse Mosaic is driven by a multi-agent large language model, and is prompted using the [ReAct](https://www.promptingguide.ai/techniques/react#results-on-knowledge-intensive-tasks) prompting framework, and as such it is entirely autonomous. RMosaic includes various tools for analyzing binary files, such as extracting text, retrieving file types, finding flaws and vulnerabilities, interacting with Ghidra, and retrieving strings. Reverse Mosaic can generate query tool briefs from PDF files, providing a summary of the content and relevant information for analysis.
 
 # 🎒 Default Tools
+The following proof-of-concept tools are included in RMosaic by default.
 - ⚒️ **Ghidra Tool**: The [Ghidra Tool](https://github.com/user1342/Reverse-Mosaic/tree/main/ReverseMosaic/tool_hub/tools/ghidra_tool) provides RMosaic with functionality for decompiling a binary, extracting addresses and function names, as well as checking cross-references.
 - 😈 **Flawfinder Tool**: The [Flaw-Finder tool](https://github.com/user1342/Reverse-Mosaic/tree/main/ReverseMosaic/tool_hub/tools/flaw_finder_tool) allows RMosaic to identify vulnerabilities in decompiled C code.
 - 🧵 **Strings Tool**: The [strings tool](https://github.com/user1342/Reverse-Mosaic/tree/main/ReverseMosaic/tool_hub/tools/strings_tool), allows RMosaic to extract strings found in a binary.
@@ -63,6 +64,9 @@ Depending on your task you may want to provide Reverse Mosaic with additional co
 ReverseMosaic.exe  --pdf_tool_data_path <path_to_pdf_file_or_directory>
 ```
 
+## Building Complex Tools
+For a guide on building more complex tools see the [readme](https://github.com/user1342/Reverse-Mosaic/tree/main/ReverseMosaic/tool_hub) here!
+
 # 🦾 Usage
 Reverse Mosaic provides two main functionalities: generating tool briefs from PDF files and executing analysis tasks based on deployment directives.
 
@@ -86,8 +90,6 @@ ReverseMosaic.exe  --pdf_tool_data_path /path/to/pdf/directory
 # Execute analysis task based on deployment directive
 ReverseMosaic.exe  --deployment_directive "Analyze binary for vulnerabilities"
 ```
-## Building Tools
-For a guide on building tools see the [readme](https://github.com/user1342/Reverse-Mosaic/tree/main/ReverseMosaic/tool_hub) here!
 
 # 🤖 Mistral-7B-Instruct-v0.2
 Behind the scenes Reverse Mosaic uses the ```Mistral-7B-Instruct-v0.2``` model from The Mistral AI Team - see [here](https://arxiv.org/abs/2310.06825). The Mistral-7B-Instruct-v0.2 Large Language Model (LLM) is an instruct fine-tuned version of the Mistral-7B-v0.2. More can be found on the model [here!](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2).
