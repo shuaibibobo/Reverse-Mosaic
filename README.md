@@ -22,7 +22,7 @@ Automated natural language binary analysis query based engine. RMosaic is driven
 # 🎒 Features
 - ⚒️ **Binary Analysis Tools**: It includes various tools for analyzing binary files, such as extracting text, retrieving file types, finding flaws and vulnerabilities, interacting with Ghidra, and retrieving strings.
 - 📄 **PDF Query Tool Generation**: Reverse Mosaic can generate query tool briefs from PDF files, providing a summary of the content and relevant information for analysis.
-- 👥 **Multi-Agent Architecture**: The toolkit utilizes a multi-agent architecture to manage and execute analysis tasks efficiently.
+- 👥 **Multi-Agent Architecture**: The toolkit utilizes a multi-agent architecture to manage and execute analysis tasks with a full context of it's task.
 
 # ⚙️ Installation
 
