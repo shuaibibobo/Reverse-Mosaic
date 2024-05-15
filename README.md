@@ -53,14 +53,9 @@ cd Reverse-Mosaic
 python3 -m venv venv
 source venv/bin/activate
 ```
-
-## Install core dependencies:
-
-```bash
-pip install -r requirements.txt
 ```
 
-## Install the package and tool dependencies:
+## Install the package and core & tool(s) dependencies:
 
 ```bash
 python install_all_tool_requirements.py <path_to_python_executable>
