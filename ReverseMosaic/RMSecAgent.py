@@ -22,12 +22,10 @@ class RMSecAgent:
         agent_help (AgentHelper): An instance of AgentHelper to assist with agent operations.
     """
 
-    if os.name == "nt":  
-        # Windows
-        working_dir = os.path.join(os.getenv("ProgramFiles"), "ReverseMosaic")
-    else:  
-        # Linux, macOS, etc.
-        working_dir = os.path.join("usr","local","ReverseMosaic")
+    home_dir = os.path.expanduser("~")
+    working_dir = os.path.join(home_dir, ".ReverseMosaic")
+    # Create a working directory
+    os.makedirs(working_dir, exist_ok=True)
 
     agent_help = None
 
@@ -53,14 +51,7 @@ class RMSecAgent:
 
         # Extract file name
         file_name = os.path.basename(pdf_file_path).replace(".pdf", "")
-        
-        # Get the directory of the script
-        script_dir = os.path.dirname(os.path.realpath(__file__))
-        
-        # Create a working directory
-        working_dir = os.path.join(script_dir, self.working_dir, file_name)
-        os.makedirs(working_dir, exist_ok=True)
-        
+                
         if should_get_pdf_text:
             description = get_text_from_pdf(pdf_file_path)
         else:
@@ -69,16 +60,19 @@ class RMSecAgent:
         if should_add_name:
             file_name = input(f"What is the name for {file_name}? ")
         
+
+        os.makedirs(os.path.join(self.working_dir, file_name), exist_ok=True)
+
         # Create JSON data
         pdf_data = {
             "file_path": pdf_file_path,
             "file_name": file_name,
-            "working_dir": working_dir,
+            "working_dir": os.path.join(self.working_dir, file_name),
             "description": description
         }
         
         # Write JSON to a file in the "briefs" subfolder
-        briefs_dir = os.path.join(script_dir, self.working_dir, "briefs")
+        briefs_dir = os.path.join(self.working_dir, "briefs")
         os.makedirs(briefs_dir, exist_ok=True)
         json_file_path = os.path.join(briefs_dir, file_name + ".json")
         with open(json_file_path, "w") as json_file:
@@ -94,14 +88,11 @@ class RMSecAgent:
         Returns:
             list: A list of tool brief dictionaries.
         """
-        # Get the directory of the script
-        script_dir = os.path.dirname(os.path.realpath(__file__))
         
         # Define the working directory
-        working_dir = os.path.join(script_dir, self.working_dir, "briefs")
         
         # Check if working directory exists
-        if not os.path.exists(working_dir):
+        if not os.path.exists(os.path.join(self.working_dir, "briefs")):
             print("Working directory doesn't exist.")
             return []
         
@@ -109,7 +100,7 @@ class RMSecAgent:
         pdf_data_list = []
         
         # Scan working directory for JSON files
-        for root, dirs, files in os.walk(working_dir):
+        for root, dirs, files in os.walk(os.path.join(self.working_dir, "briefs")):
             for file in files:
                 if file.endswith(".json"):
                     json_file_path = os.path.join(root, file)
@@ -159,46 +150,52 @@ class RMSecAgent:
         console = Console()
 
         tool_briefs = self.scan_working_dir()
+
         tools = []
         console.clear()
         with console.status("[bold green]Working on inheriting tools...") as status:
             working_dir_tools = os.path.join(self.working_dir, "tool_hub","tools")
-            local_tools = os.path.join("tool_hub","tools")
+            local_tools = os.path.join(__file__, "..","tool_hub","tools")
             tool_paths = [working_dir_tools, local_tools]
 
+            processed_tools = []
             for folder_path in tool_paths:
-                for root, dirs, files in os.walk(os.path.join(__file__, "..", folder_path)):
+                for root, dirs, files in os.walk(folder_path):
                     for dir in dirs:
                         subfolder_path = os.path.join(root, dir)
                         if "tool" in dir.lower():
                             for file_name in os.listdir(subfolder_path):
                                 if file_name.endswith(".py") and not file_name.startswith("__"):
                                     module_name = file_name[:-3]  # Remove the .py extension
-                                    module_path = os.path.join(subfolder_path, file_name)
+                                    if module_name not in processed_tools:
+                                        module_path = os.path.join(subfolder_path, file_name)
 
-                                    status.update(f"[bold green]Working on inheriting tool {module_name}")
-                                    spec = importlib.util.spec_from_file_location(module_name, module_path)
-                                    mod = importlib.util.module_from_spec(spec)
+                                        status.update(f"[bold green]Working on inheriting tool {module_name}")
+                                        spec = importlib.util.spec_from_file_location(module_name, module_path)
+                                        mod = importlib.util.module_from_spec(spec)
 
-                                    spec.loader.exec_module(mod)
+                                        spec.loader.exec_module(mod)
 
-                                    returned_tools = mod.get_class().return_tools()
-                                    tools = tools + returned_tools
-                                        
-                                    console.log(f"Inherited {len(returned_tools)} tool(s) from {module_name} in tool hub")
+                                        returned_tools = mod.get_class().return_tools()
+                                        tools = tools + returned_tools
+                                        processed_tools.append(module_name)
+                                        console.log(f"Inherited {len(returned_tools)} tool(s) from {module_name} in tool hub")
 
             for brief in tool_briefs:
                 tool_name = brief["file_name"].replace(".pdf","")
-                tool_path = brief["file_path"]
-                tool_working_dir = brief["working_dir"]
-                tool_description = brief["description"]
-                status.update(f"[bold green]Working on inheriting tool {tool_name}")
-                tool = self.agent_help.generate_tool(tool_name, tool_path, tool_working_dir, tool_description)
-                tools.append(tool)
-                console.log(f"Inherited {tool_name} tool from PDF briefs -  saved to {tool_working_dir}")
-                gc.collect()
 
-        console.clear()
+                if tool_name not in processed_tools:
+                    tool_path = brief["file_path"]
+                    tool_working_dir = brief["working_dir"]
+                    tool_description = brief["description"]
+
+                    status.update(f"[bold green]Working on inheriting tool {tool_name}")
+                    tool = self.agent_help.generate_tool(tool_name, tool_path, tool_working_dir, tool_description)
+                    tools.append(tool)
+                    console.log(f"Inherited {tool_name} tool from PDF briefs -  saved to {tool_working_dir}")
+                    gc.collect()
+                    processed_tools.append(tool_name)
+
         agent = ReActAgent.from_tools(
             tools,
             llm=self.agent_help.get_llm(),
@@ -206,8 +203,6 @@ class RMSecAgent:
             context="You are Reverse Mosaic, a binary analysis expert. It is your job to review, decompile, and analyse binary files alongside answering reverse engineering, vulnerability research, and malware analysis based questions. You should always query existing resources first before interogating a target. Only ever use correct information and never placeholders. You have access to tools that will decompile a binary, get function names, and get decompiled code from function names, use them."
         )
 
-        console.log("Starting task!")
-        
         task = agent.create_task(
             deployment_directive,
         )
