@@ -19,11 +19,9 @@
 Automated natural language binary analysis query based engine. RMosaic is driven by a large language model prompted using the [ReAct](https://www.promptingguide.ai/techniques/react#results-on-knowledge-intensive-tasks) prompting framework. RMosaic utilises a ```tool_hub``` of tools which it can use to carry out it's task. For example, it can be provided PDF files to build it's knowledge on a specific problem space, and by default it has access to the [Ghidra Tool](https://github.com/user1342/Reverse-Mosaic/tree/main/tool_hub/tools/ghidra_tool), [flaw_finder_tool](https://github.com/user1342/Reverse-Mosaic/tree/main/ReverseMosaic/tool_hub/tools/flaw_finder_tool), and [strings_tool](https://github.com/user1342/Reverse-Mosaic/tree/main/ReverseMosaic/tool_hub/tools/strings_tool).
 
 # 🎒 Features
-- 📄 **PDF Query Tool Generation**: Reverse Mosaic can generate query tool briefs from PDF files, providing a summary of the content and relevant information for analysis.
 - ⚒️ **Binary Analysis Tools**: It includes various tools for analyzing binary files, such as extracting text, retrieving file types, finding flaws and vulnerabilities, interacting with Ghidra, and retrieving strings.
+- 📄 **PDF Query Tool Generation**: Reverse Mosaic can generate query tool briefs from PDF files, providing a summary of the content and relevant information for analysis.
 - 👥 **Multi-Agent Architecture**: The toolkit utilizes a multi-agent architecture to manage and execute analysis tasks efficiently.
-- ✍️ **Rich Console Output**: It employs the *Rich* library to provide enhanced console output, making it easier to track progress and view results.
-
 
 # ⚙️ Installation
 
