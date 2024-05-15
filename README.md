@@ -63,7 +63,7 @@ python install_all_tool_requirements.py <path_to_python_executable>
 Depending on your task you may want to provide Reverse Mosaic with additional context. This can be done in the form of PDFs. For example are you doing a task on malware analysis, then provide Reverse Mosaic with a PDF on malware analysis. PDF tool briefs only need to be generated once (just don't delete or remove the PDF before your first run). To generate a query tool brief from a PDF file use the following command:
 
 ```bash
-python reverse_mosaic.py --pdf_tool_data_path <path_to_pdf_file_or_directory>
+ReverseMosaic.exe  --pdf_tool_data_path <path_to_pdf_file_or_directory>
 ```
 
 # 🦾 Usage
@@ -74,20 +74,20 @@ Reverse Mosaic provides two main functionalities: generating tool briefs from PD
 To execute analysis tasks based on a deployment directive, use the following command:
 
 ```bash
-python reverse_mosaic.py --deployment_directive <directive_description>
+ReverseMosaic.exe  --deployment_directive <directive_description>
 ```
 
 ## Example Usage
 
 ```bash
 # Generate a tool brief from a PDF file
-python reverse_mosaic.py --pdf_tool_data_path /path/to/pdf/file.pdf
+ReverseMosaic.exe  --pdf_tool_data_path /path/to/pdf/file.pdf
 
 # Generate tool briefs from all PDF files in a directory
-python reverse_mosaic.py --pdf_tool_data_path /path/to/pdf/directory
+ReverseMosaic.exe  --pdf_tool_data_path /path/to/pdf/directory
 
 # Execute analysis task based on deployment directive
-python reverse_mosaic.py --deployment_directive "Analyze binary for vulnerabilities"
+ReverseMosaic.exe  --deployment_directive "Analyze binary for vulnerabilities"
 ```
 ## Building Tools
 For a guide on building tools see the [readme](https://github.com/user1342/Reverse-Mosaic/tree/main/ReverseMosaic/tool_hub) here!
