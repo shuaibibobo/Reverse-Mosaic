@@ -93,9 +93,6 @@ ReverseMosaic.exe  --deployment_directive <directive_description>
 ## Example Usage
 
 ```bash
-# Generate a tool brief from a PDF file
-ReverseMosaic.exe  --pdf_tool_data_path /path/to/pdf/file.pdf
-
 # Generate tool briefs from all PDF files in a directory
 ReverseMosaic.exe  --pdf_tool_data_path /path/to/pdf/directory
 
