@@ -92,6 +92,17 @@ Example requirements.txt:
 python-magic
 ```
 
+### Readme.md
+For best adoption, ensure to have a readme to explain your tool in it's root folder.
+
+```
+ReverseMosaic/
+├── tool_hub/
+│   ├── tools/
+│   │   ├── file_type_tool.py
+│   │   └── readme.md   <-- Your readme file
+```
+
 <p align="center"> <img margin-right: auto width=25% src="../../small-logo.png"> </p>
 
 
