@@ -1,0 +1,3 @@
+[submodule "ReverseMosaic/tool_hub/tools/Reverse-Mosaic-Code-LLM-Tool"]
+	path = ReverseMosaic/tool_hub/tools/Reverse-Mosaic-Code-LLM-Tool
+	url = https://github.com/user1342/Reverse-Mosaic-Code-LLM-Tool.git

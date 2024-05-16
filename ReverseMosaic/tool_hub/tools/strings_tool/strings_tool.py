@@ -1,4 +1,3 @@
-from llama_index.core.tools import FunctionTool
 import re
 try:
     from ReverseMosaic.tool_hub.base_tool import BaseToolClass
