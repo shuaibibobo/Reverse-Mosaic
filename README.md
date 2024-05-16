@@ -25,7 +25,7 @@ The following proof-of-concept tools are included in RMosaic by default.
 - 🧵 **Strings Tool**: The [strings tool](https://github.com/user1342/Reverse-Mosaic/tree/main/ReverseMosaic/tool_hub/tools/strings_tool), allows RMosaic to extract strings found in a binary.
 
 # ⭐ Sponsor Tools
-To support the development of Reverse Mosaic all supporters of [User1342](https://github.com/sponsors/user1342) gain access to the following tools immediatly via private GitHub repos that can be added as git-submodules. 
+To support the development of Reverse Mosaic all supporters of [User1342](https://github.com/sponsors/user1342) gain access to the following tools immediately via private repos that can be added as git-submodules. 
 - 💻 **Code Analysis**: A CodeGemma LLM tool designed for explaining and writing code as tasked by the agent.
 
 # ⚙️ Installation
