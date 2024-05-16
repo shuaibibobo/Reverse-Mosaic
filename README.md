@@ -41,7 +41,7 @@ Reverse Mosaic requires [Ghidra](https://ghidra-sre.org/) to be installed and ac
 ## Clone this repository:
 
 ```bash
-git clone --recursive https://github.com/your/repo.git
+git clone --recursive https://github.com/your/repo.git](https://github.com/user1342/Reverse-Mosaic.git
 cd Reverse-Mosaic
 ```
 
