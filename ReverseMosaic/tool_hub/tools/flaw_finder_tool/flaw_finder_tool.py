@@ -13,7 +13,7 @@ class FlawFinderTool(BaseToolClass):
 
     @staticmethod
     def find_flaws_and_vulnerabilities(c_code: str) -> str:
-        """Retrieves information on weaknesses, issues, flaws, and vulnerabilities from provided C code.
+        """Retrieves information on weaknesses, issues, flaws, and vulnerabilities from provided decompiled C code.
 
         Args:
             c_code (str): C decompilation
@@ -32,22 +32,17 @@ class FlawFinderTool(BaseToolClass):
 
             return result
 
-    def return_tools(self) -> list:
-        """Returns a list of FunctionTool instances for Ghidra-related functions.
+    def get_tool_functions(self) -> list:
+        """Returns a list of tools for Ghidra-related functions.
 
         Returns:
-            list: A list of FunctionTool instances.
+            list: A list of functions.
         """
         list_of_functions = [
             FlawFinderTool.find_flaws_and_vulnerabilities,
         ]
 
-        tools = []
-        for fun in list_of_functions:
-            tool = FunctionTool.from_defaults(fun,)
-            tools.append(tool)
-
-        return tools
+        return list_of_functions
     
 def get_class():
     return FlawFinderTool()
