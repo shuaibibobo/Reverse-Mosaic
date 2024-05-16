@@ -24,7 +24,7 @@ def get_file_type(file_path):
 ```
 
 ### Create a Tool Class
-Next, create a class that encapsulates the tool function. This class should inherit from ```BaseToolClass``` and implement the ```return_tools``` method, which returns a list of ```FunctionTool``` instances.
+Next, create a class that encapsulates the tool function. This class should inherit from ```BaseToolClass``` and implement the ```get_tool_functions``` method, which returns a list of all function (tools) that you want the Reverse Mosaic agent to use. Ensure to use docstrings and type-hinting as these allow the agent to fully understand the function.
 
 ```python
 from llama_index.core.tools import FunctionTool
@@ -47,18 +47,13 @@ class FileTypeTool(BaseToolClass):
         return magic.from_file(file_path, mime=True)
 
     @staticmethod
-    def return_tools():
+    def get_tool_functions():
         """Returns a list of FunctionTool instances for file type retrieval."""
         list_of_functions = [
             FileTypeTool.get_file_type,
         ]
 
-        tools = []
-        for fun in list_of_functions:
-            tool = FunctionTool.from_defaults(fun,)
-            tools.append(tool)
-
-        return tools
+        return list_of_functions
 ```
 
 ### Store the Tool
@@ -96,19 +91,6 @@ Example requirements.txt:
 ```
 python-magic
 ```
-
-## How Tools Work
-### Tool Execution
-When Reverse Mosaic executes, it automatically scans the ```tool_hub/tools``` directory for Python files containing tool classes inheriting from BaseToolClass. It then loads these classes and retrieves the tools using the return_tools method.
-
-### Tool Structure
-Each tool class should define one or more static methods that perform specific analysis tasks. These methods take the binary file path as input and return the analysis result. The return_tools method creates FunctionTool instances for each tool method, making them accessible within Reverse Mosaic.
-
-### Integration with Reverse Mosaic
-Once the tools are loaded, Reverse Mosaic can utilize them to perform analysis tasks based on deployment directives or user requests. Tools are executed within the multi-agent architecture of Reverse Mosaic, allowing for efficient and scalable analysis of binary files.
-
-# Conclusion
-By following this guide, you can create custom tools for Reverse Mosaic to extend its capabilities and perform specialized analysis tasks on binary files. Remember to structure your tools properly, add dependencies to the requirements.txt file, and store them in the designated directory for seamless integration with Reverse Mosaic.
 
 <p align="center"> <img margin-right: auto width=25% src="../../small-logo.png"> </p>
 
