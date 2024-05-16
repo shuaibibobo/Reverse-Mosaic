@@ -35,7 +35,7 @@ class RMSecAgent:
         """
         self.agent_help = AgentHelper()
 
-    def generate_tool_brief(self, pdf_file_path, should_get_pdf_text=True, should_add_name=False):
+    def _generate_tool_brief(self, pdf_file_path, should_get_pdf_text=True, should_add_name=False):
         """
         Generates a tool brief from a PDF file.
 
@@ -81,7 +81,7 @@ class RMSecAgent:
         print("Brief generated for PDF file:", file_name)
         print("JSON file created at:", json_file_path)
 
-    def scan_working_dir(self):
+    def _scan_working_dir(self):
         """
         Scans the working directory for tool briefs.
 
@@ -114,7 +114,7 @@ class RMSecAgent:
         
         return pdf_data_list
 
-    def generate_briefs_from_directory(self, directory):
+    def _generate_briefs_from_directory(self, directory):
         """
         Generates tool briefs from PDF files in a directory.
 
@@ -135,9 +135,9 @@ class RMSecAgent:
         
         for pdf_file in pdf_files:
             pdf_file_path = os.path.join(directory, pdf_file)
-            self.generate_tool_brief(pdf_file_path)
+            self._generate_tool_brief(pdf_file_path)
 
-    def query_agent(self, deployment_directive, is_verbose=False):
+    def _query_agent(self, deployment_directive, is_verbose=False):
         """
         Queries the agent based on a deployment directive.
 
@@ -149,7 +149,7 @@ class RMSecAgent:
         """
         console = Console()
 
-        tool_briefs = self.scan_working_dir()
+        tool_briefs = self._scan_working_dir()
 
         tools = []
         console.clear()
@@ -213,7 +213,7 @@ class RMSecAgent:
 
 def ask_query(query, is_verbose=False):
     sec_agent = RMSecAgent()
-    return sec_agent.query_agent(query,is_verbose)
+    return sec_agent._query_agent(query,is_verbose)
 
 def run():
     """
@@ -230,7 +230,7 @@ def run():
 
     if args.pdf_tool_data_path:
         sec_agent = RMSecAgent()
-        sec_agent.generate_briefs_from_directory(args.pdf_tool_data_path)
+        sec_agent._generate_briefs_from_directory(args.pdf_tool_data_path)
     elif args.deployment_directive:
         print(ask_query(args.deployment_directive, True))
     else:
