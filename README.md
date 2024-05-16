@@ -1,5 +1,5 @@
 <p align="center">
-    <img width=100% src="simple-logo.png">
+    <img width=100% src="logo.png">
   </a>
 </p>
 <p align="center"> 🤖 Multi-Agent Binary Analysis Toolkit 🧩 </p>
