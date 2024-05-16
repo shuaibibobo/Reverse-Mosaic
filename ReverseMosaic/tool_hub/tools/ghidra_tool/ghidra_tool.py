@@ -136,11 +136,11 @@ class GhidraTool(BaseToolClass):
 
         return out
 
-    def return_tools(self) -> list:
-        """Returns a list of FunctionTool instances for Ghidra-related functions.
+    def get_tool_functions(self) -> list:
+        """Returns a list of functions for Ghidra-related functions.
 
         Returns:
-            list: A list of FunctionTool instances.
+            list: A list of functions.
         """
         list_of_functions = [
             GhidraTool.get_all_function_names_and_addresses,
@@ -149,13 +149,7 @@ class GhidraTool(BaseToolClass):
             GhidraTool.get_function_address_by_name,
             GhidraTool.get_function_name_by_address
         ]
-
-        tools = []
-        for fun in list_of_functions:
-            tool = FunctionTool.from_defaults(fun,)
-            tools.append(tool)
-
-        return tools
+        return list_of_functions
 
 def get_class():
     return GhidraTool()
